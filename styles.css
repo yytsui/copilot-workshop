@@ -217,6 +217,29 @@ h1 {
   color: var(--color-text-muted);
 }
 
+/* 清除已完成按鈕,沒有已完成項目時透過 hidden 屬性隱藏 */
+.clear-completed-btn {
+  display: block;
+  margin: 12px 0 0 auto;
+  padding: 8px 14px;
+  border: 1px solid var(--color-danger);
+  border-radius: 8px;
+  background-color: transparent;
+  color: var(--color-danger);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+
+.clear-completed-btn:hover {
+  background-color: var(--color-danger);
+  color: #fff;
+}
+
+.clear-completed-btn[hidden] {
+  display: none;
+}
+
 /* 手機螢幕的響應式調整 */
 @media (max-width: 480px) {
   body {

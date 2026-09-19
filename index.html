@@ -46,6 +46,16 @@
 
       <!-- 底部統計未完成項目數量,永遠顯示整體數量,不受篩選影響 -->
       <p id="counter" class="counter">未完成:0 項</p>
+
+      <!-- 清除所有已完成項目的按鈕,沒有已完成項目時會隱藏 -->
+      <button
+        type="button"
+        id="clear-completed"
+        class="clear-completed-btn"
+        aria-label="清除所有已完成的待辦事項"
+      >
+        清除已完成
+      </button>
     </main>
 
     <script src="app.js"></script>
