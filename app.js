@@ -12,6 +12,7 @@
   const counter = document.getElementById("counter");
   const themeToggle = document.getElementById("theme-toggle");
   const filterRow = document.getElementById("filter-row");
+  const clearCompletedBtn = document.getElementById("clear-completed");
 
   // 待辦事項陣列,每一筆為 { id, text, completed }
   let todos = loadTodos();
@@ -102,6 +103,10 @@
     // 未完成數量永遠以整體 todos 計算,不受篩選影響
     const uncompletedCount = todos.filter((todo) => !todo.completed).length;
     counter.textContent = `未完成:${uncompletedCount} 項`;
+
+    // 沒有已完成項目時隱藏「清除已完成」按鈕
+    const hasCompleted = todos.some((todo) => todo.completed);
+    clearCompletedBtn.hidden = !hasCompleted;
   }
 
   // 依目前篩選條件回傳清單為空時應顯示的提示文字
@@ -148,6 +153,13 @@
     render();
   }
 
+  // 刪除所有已完成的待辦事項
+  function clearCompleted() {
+    todos = todos.filter((t) => !t.completed);
+    saveTodos();
+    render();
+  }
+
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     const text = input.value.trim();
@@ -179,6 +191,14 @@
       .querySelectorAll(".filter-btn")
       .forEach((el) => el.classList.toggle("active", el === btn));
     render();
+  });
+
+  // 清除已完成按鈕,因為不可逆所以點擊後先詢問確認
+  clearCompletedBtn.addEventListener("click", () => {
+    const confirmed = window.confirm("確定要清除所有已完成的待辦事項嗎?此操作無法復原。");
+    if (confirmed) {
+      clearCompleted();
+    }
   });
 
   initTheme();
