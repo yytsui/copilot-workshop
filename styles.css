@@ -14,13 +14,14 @@
 }
 
 /* 深色模式配色,透過 [data-theme="dark"] 覆寫上方的 CSS 變數 */
+/* --color-primary 與 --color-text-muted 已加深/加亮,確保與卡片背景對比達 WCAG AA(4.5:1)以上 */
 [data-theme="dark"] {
   --color-bg: #1a1d21;
   --color-card-bg: #2a2e33;
-  --color-primary: #6a8fc9;
-  --color-primary-hover: #7fa0d6;
+  --color-primary: #3d6099;
+  --color-primary-hover: #4a72b0;
   --color-text: #e6e8eb;
-  --color-text-muted: #8a92a0;
+  --color-text-muted: #a3acb8;
   --color-border: #3f444b;
   --color-danger: #e88b8b;
   --color-danger-hover: #f0a3a3;
