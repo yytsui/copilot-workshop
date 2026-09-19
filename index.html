@@ -8,7 +8,11 @@
   </head>
   <body>
     <main class="card">
-      <h1>待辦清單</h1>
+      <div class="header-row">
+        <h1>待辦清單</h1>
+        <!-- 深色 / 淺色模式切換按鈕 -->
+        <button type="button" id="theme-toggle" class="theme-toggle"></button>
+      </div>
 
       <!-- 新增待辦事項的輸入區 -->
       <form id="todo-form" class="input-row">
@@ -21,13 +25,26 @@
         <button type="submit">新增</button>
       </form>
 
+      <!-- 篩選按鈕:全部 / 未完成 / 已完成 -->
+      <div class="filter-row" id="filter-row">
+        <button type="button" class="filter-btn active" data-filter="all">
+          全部
+        </button>
+        <button type="button" class="filter-btn" data-filter="active">
+          未完成
+        </button>
+        <button type="button" class="filter-btn" data-filter="completed">
+          已完成
+        </button>
+      </div>
+
       <!-- 待辦事項列表 -->
       <ul id="todo-list" class="todo-list"></ul>
 
-      <!-- 清單為空時顯示的提示文字 -->
+      <!-- 清單(或篩選後)為空時顯示的提示文字 -->
       <p id="empty-hint" class="empty-hint">還沒有任何待辦事項,新增一個吧!</p>
 
-      <!-- 底部統計未完成項目數量 -->
+      <!-- 底部統計未完成項目數量,永遠顯示整體數量,不受篩選影響 -->
       <p id="counter" class="counter">未完成:0 項</p>
     </main>
 

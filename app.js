@@ -3,15 +3,20 @@
   "use strict";
 
   const STORAGE_KEY = "todo-list-items";
+  const THEME_STORAGE_KEY = "todo-list-theme";
 
   const form = document.getElementById("todo-form");
   const input = document.getElementById("todo-input");
   const list = document.getElementById("todo-list");
   const emptyHint = document.getElementById("empty-hint");
   const counter = document.getElementById("counter");
+  const themeToggle = document.getElementById("theme-toggle");
+  const filterRow = document.getElementById("filter-row");
 
   // 待辦事項陣列,每一筆為 { id, text, completed }
   let todos = loadTodos();
+  // 目前的篩選條件:all(全部) / active(未完成) / completed(已完成)
+  let currentFilter = "all";
 
   // 從 localStorage 讀取資料,若無資料或格式錯誤則回傳空陣列
   function loadTodos() {
@@ -28,11 +33,44 @@
     localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
   }
 
+  // 依使用者儲存的偏好或作業系統設定,套用深色 / 淺色主題
+  function applyTheme(theme) {
+    if (theme === "dark") {
+      document.documentElement.setAttribute("data-theme", "dark");
+      themeToggle.textContent = "☀️ 淺色模式";
+    } else {
+      document.documentElement.removeAttribute("data-theme");
+      themeToggle.textContent = "🌙 深色模式";
+    }
+  }
+
+  // 初始化主題:若使用者手動設定過就沿用,否則跟隨作業系統設定
+  function initTheme() {
+    const saved = localStorage.getItem(THEME_STORAGE_KEY);
+    if (saved === "dark" || saved === "light") {
+      applyTheme(saved);
+      return;
+    }
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    applyTheme(prefersDark ? "dark" : "light");
+  }
+
   // 依目前的 todos 重新渲染整個列表畫面
   function render() {
     list.innerHTML = "";
 
-    todos.forEach((todo) => {
+    // 依目前篩選條件過濾要顯示的項目
+    const filteredTodos = todos.filter((todo) => {
+      if (currentFilter === "active") {
+        return !todo.completed;
+      }
+      if (currentFilter === "completed") {
+        return todo.completed;
+      }
+      return true;
+    });
+
+    filteredTodos.forEach((todo) => {
       const li = document.createElement("li");
       li.className = "todo-item" + (todo.completed ? " completed" : "");
 
@@ -57,11 +95,24 @@
       list.appendChild(li);
     });
 
-    // 清單為空時顯示提示文字,否則隱藏
-    emptyHint.style.display = todos.length === 0 ? "block" : "none";
+    // 依篩選結果決定提示文字,並在結果為空時顯示
+    emptyHint.textContent = getEmptyHintText();
+    emptyHint.style.display = filteredTodos.length === 0 ? "block" : "none";
 
+    // 未完成數量永遠以整體 todos 計算,不受篩選影響
     const uncompletedCount = todos.filter((todo) => !todo.completed).length;
     counter.textContent = `未完成:${uncompletedCount} 項`;
+  }
+
+  // 依目前篩選條件回傳清單為空時應顯示的提示文字
+  function getEmptyHintText() {
+    if (currentFilter === "active") {
+      return "沒有未完成的待辦事項!";
+    }
+    if (currentFilter === "completed") {
+      return "還沒有已完成的待辦事項。";
+    }
+    return "還沒有任何待辦事項,新增一個吧!";
   }
 
   // 新增一筆待辦事項
@@ -104,5 +155,27 @@
     input.focus();
   });
 
+  // 深色 / 淺色模式切換按鈕,點擊後手動記住使用者的選擇
+  themeToggle.addEventListener("click", () => {
+    const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+    const nextTheme = isDark ? "light" : "dark";
+    applyTheme(nextTheme);
+    localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+  });
+
+  // 篩選按鈕點擊事件,切換目前篩選條件並更新按鈕樣式
+  filterRow.addEventListener("click", (event) => {
+    const btn = event.target.closest(".filter-btn");
+    if (!btn) {
+      return;
+    }
+    currentFilter = btn.dataset.filter;
+    filterRow
+      .querySelectorAll(".filter-btn")
+      .forEach((el) => el.classList.toggle("active", el === btn));
+    render();
+  });
+
+  initTheme();
   render();
 })();

@@ -13,8 +13,26 @@
   --radius: 12px;
 }
 
+/* 深色模式配色,透過 [data-theme="dark"] 覆寫上方的 CSS 變數 */
+[data-theme="dark"] {
+  --color-bg: #1a1d21;
+  --color-card-bg: #2a2e33;
+  --color-primary: #6a8fc9;
+  --color-primary-hover: #7fa0d6;
+  --color-text: #e6e8eb;
+  --color-text-muted: #8a92a0;
+  --color-border: #3f444b;
+  --color-danger: #e88b8b;
+  --color-danger-hover: #f0a3a3;
+  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
 * {
   box-sizing: border-box;
+}
+
+body {
+  transition: background-color 0.15s ease-in-out;
 }
 
 body {
@@ -39,10 +57,34 @@ body {
   padding: 24px;
 }
 
+/* 標題與深色模式切換按鈕同一列 */
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
 h1 {
-  margin: 0 0 20px;
+  margin: 0;
   font-size: 1.5rem;
-  text-align: center;
+}
+
+.theme-toggle {
+  border: 1px solid var(--color-border);
+  background-color: transparent;
+  color: var(--color-text);
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.theme-toggle:hover {
+  background-color: var(--color-bg);
 }
 
 .input-row {
@@ -77,6 +119,36 @@ h1 {
 
 .input-row button:hover {
   background-color: var(--color-primary-hover);
+}
+
+/* 篩選按鈕列 */
+.filter-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.filter-btn {
+  flex: 1;
+  padding: 8px 0;
+  border: 1px solid var(--color-border);
+  background-color: transparent;
+  color: var(--color-text-muted);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+
+.filter-btn:hover {
+  background-color: var(--color-bg);
+}
+
+/* 目前選中的篩選按鈕 */
+.filter-btn.active {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
 }
 
 .todo-list {
